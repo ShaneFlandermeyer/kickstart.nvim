@@ -777,7 +777,6 @@ do
       -- You can specify filetypes to autoformat on save here:
       local enabled_filetypes = {
         lua = true,
-        python = true,
       }
       if enabled_filetypes[vim.bo[bufnr].filetype] then
         return { timeout_ms = 500 }
@@ -970,7 +969,7 @@ do
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- require 'custom.plugins'
+  require 'custom.plugins'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
