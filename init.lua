@@ -172,6 +172,9 @@ do
   -- See `:help 'confirm'`
   vim.o.confirm = true
 
+  vim.opt.tabstop = 4 -- Visual width of a tab
+  vim.opt.softtabstop = 4 -- Number of spaces a tab counts for while editing
+  vim.opt.shiftwidth = 4 -- Size of an indent
   -- [[ Basic Keymaps ]]
   --  See `:help vim.keymap.set()`
 
