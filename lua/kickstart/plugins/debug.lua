@@ -142,20 +142,8 @@ dap.configurations.python = {
     type = "python",
     request = "launch",
     program = function()
-      return vim.fn.input('Filename: ', vim.fn.getcwd() .. '/', 'file')
+      return vim.fn.input('Filename: ', vim.fn.expand('%:p'), 'file')
     end,
-    pythonPath = get_python_path,
-    args = function()
-      local args_str = vim.fn.input('Arguments: ')
-      return vim.fn.split(args_str, ' ')
-    end,
-    console = "integratedTerminal",
-  },
-  {
-    name = "Launch current file",
-    type = "python",
-    request = "launch",
-    program = "${file}",
     pythonPath = get_python_path,
     args = function()
       local args_str = vim.fn.input('Arguments: ')
