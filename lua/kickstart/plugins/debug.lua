@@ -137,7 +137,7 @@ dap.configurations.python = {
     pythonPath = get_python_path,
     args = function()
       local args_str = vim.fn.input 'Arguments: '
-      return vim.fn.split(args_str, ' ')
+      return require('dap.utils').splitstr(args_str)
     end,
     console = 'integratedTerminal',
     justMyCode = false,
