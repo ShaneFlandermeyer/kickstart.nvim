@@ -13,6 +13,7 @@ vim.pack.add {
   'https://github.com/mason-org/mason.nvim',
   'https://github.com/jay-babu/mason-nvim-dap.nvim',
   'https://github.com/leoluz/nvim-dap-go',
+  'https://github.com/mfussenegger/nvim-dap-python',
 }
 
 -- Basic debugging keymaps, feel free to change to your liking!
@@ -42,6 +43,7 @@ require('mason-nvim-dap').setup {
   ensure_installed = {
     -- Update this to ensure that you have the debuggers for the langs you want
     'cppdbg',
+    'debugpy',
   },
 }
 
@@ -120,4 +122,45 @@ dap.configurations.cpp = {
     end,
     cwd = '${workspaceFolder}'
   }
+}
+
+-- Select the python executable for debugging
+local cached_python_path = nil
+local function get_python_path()
+  local default_path = cached_python_path
+  if not default_path or default_path == "" then
+    default_path = '/usr/bin/python'
+  end
+
+  cached_python_path = vim.fn.input('Path to Python executable: ', default_path, 'file')
+  return cached_python_path
+end
+
+dap.configurations.python = {
+  {
+    name = "Launch file",
+    type = "python",
+    request = "launch",
+    program = function()
+      return vim.fn.input('Filename: ', vim.fn.getcwd() .. '/', 'file')
+    end,
+    pythonPath = get_python_path,
+    args = function()
+      local args_str = vim.fn.input('Arguments: ')
+      return vim.fn.split(args_str, ' ')
+    end,
+    console = "integratedTerminal",
+  },
+  {
+    name = "Launch current file",
+    type = "python",
+    request = "launch",
+    program = "${file}",
+    pythonPath = get_python_path,
+    args = function()
+      local args_str = vim.fn.input('Arguments: ')
+      return vim.fn.split(args_str, ' ')
+    end,
+    console = "integratedTerminal",
+  },
 }
