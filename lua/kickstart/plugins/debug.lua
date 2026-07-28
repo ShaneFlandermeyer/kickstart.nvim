@@ -89,48 +89,40 @@ dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
 dap.configurations.cpp = {
   {
-    name = "Launch",
-    type = "cppdbg",
-    request = "launch",
-    program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-    end,
+    name = 'Launch',
+    type = 'cppdbg',
+    request = 'launch',
+    program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
     args = {}, -- provide arguments if needed
-    cwd = "${workspaceFolder}",
+    cwd = '${workspaceFolder}',
     stopAtEntry = false,
   },
   {
-    name = "Select and attach to process",
-    type = "gdb",
-    request = "attach",
-    program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-    end,
+    name = 'Select and attach to process',
+    type = 'gdb',
+    request = 'attach',
+    program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
     pid = function()
-      local name = vim.fn.input('Executable name (filter): ')
-      return require("dap.utils").pick_process({ filter = name })
+      local name = vim.fn.input 'Executable name (filter): '
+      return require('dap.utils').pick_process { filter = name }
     end,
-    cwd = '${workspaceFolder}'
+    cwd = '${workspaceFolder}',
   },
   {
     name = 'Attach to gdbserver :1234',
     type = 'gdb',
     request = 'attach',
     target = 'localhost:1234',
-    program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-    end,
-    cwd = '${workspaceFolder}'
-  }
+    program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
+    cwd = '${workspaceFolder}',
+  },
 }
 
 -- Select the python executable for debugging
 local cached_python_path = nil
 local function get_python_path()
   local default_path = cached_python_path
-  if not default_path or default_path == "" then
-    default_path = '/usr/bin/python'
-  end
+  if not default_path or default_path == '' then default_path = vim.env.VIRTUAL_ENV and (vim.env.VIRTUAL_ENV .. '/bin/python') or '/usr/bin/python' end
 
   cached_python_path = vim.fn.input('Path to Python executable: ', default_path, 'file')
   return cached_python_path
@@ -138,17 +130,16 @@ end
 
 dap.configurations.python = {
   {
-    name = "Launch file",
-    type = "python",
-    request = "launch",
-    program = function()
-      return vim.fn.input('Filename: ', vim.fn.expand('%:p'), 'file')
-    end,
+    name = 'Launch file',
+    type = 'python',
+    request = 'launch',
+    program = function() return vim.fn.input('Filename: ', vim.fn.expand '%:p', 'file') end,
     pythonPath = get_python_path,
     args = function()
-      local args_str = vim.fn.input('Arguments: ')
+      local args_str = vim.fn.input 'Arguments: '
       return vim.fn.split(args_str, ' ')
     end,
-    console = "integratedTerminal",
+    console = 'integratedTerminal',
+    justMyCode = false,
   },
 }
