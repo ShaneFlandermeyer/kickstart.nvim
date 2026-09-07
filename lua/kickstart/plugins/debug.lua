@@ -87,34 +87,33 @@ dap.listeners.after.event_initialized['dapui_config'] = dapui.open
 dap.listeners.before.event_terminated['dapui_config'] = dapui.close
 dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
+-- Get the C++ program to run and its arguments. This is needed to ensure that the user is prompted for the path before the arguments
+local cpp_launch_cache = nil
+local function get_launch_inputs()
+  if not cpp_launch_cache then
+    local program = vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+    local args_raw = vim.fn.input 'Arguments: '
+    cpp_launch_cache = {
+      program = program,
+      args = require('dap.utils').splitstr(args_raw),
+    }
+
+    -- Reset cache on the next event loop tick for future runs
+    vim.schedule(function() cpp_launch_cache = nil end)
+  end
+  return cpp_launch_cache
+end
 dap.configurations.cpp = {
   {
-    name = 'Launch',
+    name = 'Launch file',
     type = 'cppdbg',
     request = 'launch',
-    program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
-    args = {}, -- provide arguments if needed
+    program = function() return get_launch_inputs().program end,
+    args = function() return get_launch_inputs().args end,
     cwd = '${workspaceFolder}',
     stopAtEntry = false,
-  },
-  {
-    name = 'Select and attach to process',
-    type = 'gdb',
-    request = 'attach',
-    program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
-    pid = function()
-      local name = vim.fn.input 'Executable name (filter): '
-      return require('dap.utils').pick_process { filter = name }
-    end,
-    cwd = '${workspaceFolder}',
-  },
-  {
-    name = 'Attach to gdbserver :1234',
-    type = 'gdb',
-    request = 'attach',
-    target = 'localhost:1234',
-    program = function() return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file') end,
-    cwd = '${workspaceFolder}',
+    MIMode = 'gdb',
+    miDebuggerPath = '/usr/bin/gdb',
   },
 }
 
