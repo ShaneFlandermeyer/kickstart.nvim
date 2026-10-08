@@ -2,7 +2,7 @@ vim.pack.add {
   'https://github.com/swaits/zellij-nav.nvim',
 }
 
-require('zellij-nav').setup()
+require('zellij-nav').setup({})
 
 vim.keymap.set('n', '<C-h>', '<cmd>ZellijNavigateLeftTab<cr>', {
   silent = true,
